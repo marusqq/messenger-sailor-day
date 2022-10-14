@@ -3,13 +3,16 @@ import os
 import platform
 from datetime import datetime
 import time
-
-if platform.system() == 'Windows':
-    import py_setenv
-
 import pyotp
 from cryptography.fernet import Fernet
 import getpass
+
+from typing import Tuple
+
+from logger import logger
+
+if platform.system() == 'Windows':
+    import py_setenv
 
 
 def wait_seconds(seconds: int):
@@ -70,6 +73,35 @@ def get_environment_value(env_path: str):
 
 def generate_fernet_key() -> bytes:
     return Fernet.generate_key()
+
+
+def read_group_ids(env: str) -> Tuple[int, dict]:
+    logger.info("[Setup group IDs]: Started")
+
+    with open("group_ids.json") as json_file:
+        json_data = json.load(json_file)
+
+    # some checks
+    if 'video_group_id' not in json_data:
+        raise SystemExit('[Setup group IDs]: video_group_id not found in group_ids.json')
+
+    if env == 'prod':
+        expected_group_ids = 'send_group_ids'
+    else:
+        expected_group_ids = 'test_group_ids'
+
+    if expected_group_ids not in json_data:
+        raise SystemExit(f'[Setup group IDs]: {expected_group_ids} not found in group_ids.json')
+
+    video_group_id = json_data['video_group_id']
+    group_ids = json_data[expected_group_ids]
+
+    logger.info(f"[Setup group IDs]: Video group ID: {video_group_id}")
+    logger.info(f"[Setup group IDs]: Group IDs used: {group_ids}")
+
+    logger.info("[Setup group IDs]: Done")
+
+    return video_group_id, group_ids
 
 
 def read_credentials() -> dict:

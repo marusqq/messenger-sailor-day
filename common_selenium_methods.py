@@ -15,18 +15,24 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.remote.webdriver import WebElement
 
+from logger import logger
 
-def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> Tuple[bool, WebDriver]:
+
+def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> WebDriver:
     """
     Method that logs in to messenger
     :return: True if logging in was successful
     """
+
+    logger.info("[Log in to Messenger]: Started")
     # 0. Check env
     #       0.1. Check that fernet_key exists
     fernet_key = util.get_fernet_key()
+    logger.info("[Log in to Messenger]: Fernet key: exists")
 
     #       0.2. Read credentials.json
     credentials_dict = util.read_credentials()
+    logger.info("[Log in to Messenger]: Credentials: read")
 
     #       0.3. Setup FirefoxOptions
     options = FirefoxOptions()
@@ -40,11 +46,14 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> Tuple
     if maximise:
         driver.fullscreen_window()
 
+    logger.info(f"[Log in to Messenger]: Firefox: initialised (headless={headless}, maximised={maximise})")
+
     #       1.1. Accept basic cookies
     press_element(
         driver, time_to_wait=10,
         element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']"
     )
+    logger.info("[Log in to Messenger]: Cookies: accepted")
 
     # 2. Enter login details
     #       2.0. Decode credentials
@@ -52,46 +61,59 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> Tuple
         credentials=credentials_dict,
         fernet_key=fernet_key
     )
+    logger.info("[Log in to Messenger]: Credentials: decoded")
 
     #       2.1. Enter login
     enter_input(driver, input_element="//input[@id='email']", input_text=credentials_dict['login'])
+    logger.info("[Log in to Messenger]: Login: entered")
 
     #       2.2. Enter pass
     enter_input(driver, input_element="//input[@id='pass']", input_text=credentials_dict['password'])
+    logger.info("[Log in to Messenger]: Password: entered")
 
     #       2.3. Press log in
     press_element(driver, element_to_find="//button[@id='loginbutton']")
+    logger.info("[Log in to Messenger]: Log in: pressed")
 
     # 3. Go through 2fa process
     #       3.1. Accept 2fa process
     press_element(driver, element_to_find="//a[@role='button']")
+    logger.info("[Log in to Messenger]: 2FA challenge: Accepted")
 
     #       3.2. Confirm cookies on facebook.com now
     press_element(
         driver, time_to_wait=10,
         element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']"
     )
+    logger.info("[Log in to Messenger]: Facebook 2FA cookies: Accepted")
 
     #       3.3. Enter 2fa code
     current_2fa_code = util.get_current_2fa_code(credentials_dict['totp_code'])
     enter_input(driver, input_element="//input[@id='approvals_code']", input_text=current_2fa_code)
+    logger.info(f"[Log in to Messenger]: 2FA code: entered ({current_2fa_code})")
 
     # 4. Make messenger trust the driver
     in_checkpoint = True
     while in_checkpoint:
         in_checkpoint = press_element(driver, element_to_find="//button[@id='checkpointSubmitButton']")
+        logger.info("[Log in to Messenger]: Making messenger trust driver")
         time.sleep(2)
 
     if not wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
+        logger.info("[Log in to Messenger]: Chats did not load, something went bad. Making screenshot")
         util.make_screenshot(driver)
-        return False, driver
+        raise SystemExit("[Log in to Messenger]: Failed")
 
     # 5. Check if driver's url changed to something like: https://www.messenger.com/t/xxxxxxxxxxxxxxxxxx/
-    if 'messenger.com/t/' in driver.current_url:
-        return True, driver
+    if 'messenger.com/t/' not in driver.current_url:
+        logger.info(f"[Log in to Messenger]: "
+                    f"Driver's current url is not messenger.com/t/xxxxx. Current URL: {driver.current_url}. "
+                    f"Making screenshot")
+        util.make_screenshot(driver)
+        raise SystemExit("[Log in to Messenger]: Logging in to messenger failed")
 
-    util.make_screenshot(driver)
-    return False, driver
+    logger.info("[Log in to Messenger]: OK")
+    return driver
 
 
 def wait_until_found_and_return_element(
