@@ -1,4 +1,5 @@
-from typing import Tuple
+import time
+from typing import Tuple, Optional, List
 
 from selenium.common import TimeoutException
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -12,9 +13,10 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.remote.webdriver import WebElement
 
 
-def log_in_to_messenger(headless: bool = False) -> Tuple[bool, WebDriver]:
+def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> Tuple[bool, WebDriver]:
     """
     Method that logs in to messenger
     :return: True if logging in was successful
@@ -34,6 +36,9 @@ def log_in_to_messenger(headless: bool = False) -> Tuple[bool, WebDriver]:
     # 1. Open messenger.com
     driver = webdriver.Firefox(options=options)
     driver.get('https://messenger.com')
+
+    if maximise:
+        driver.fullscreen_window()
 
     #       1.1. Accept basic cookies
     press_element(
@@ -75,6 +80,7 @@ def log_in_to_messenger(headless: bool = False) -> Tuple[bool, WebDriver]:
     in_checkpoint = True
     while in_checkpoint:
         in_checkpoint = press_element(driver, element_to_find="//button[@id='checkpointSubmitButton']")
+        time.sleep(2)
 
     if not wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
         util.make_screenshot(driver)
@@ -93,7 +99,7 @@ def wait_until_found_and_return_element(
         look_by: By,
         look_for: str,
         time_to_wait: int = 20
-):
+) -> Optional[WebElement]:
     try:
         element = WebDriverWait(driver, time_to_wait).until(
             expected_conditions.visibility_of_element_located((look_by, look_for))
@@ -102,6 +108,22 @@ def wait_until_found_and_return_element(
 
     except TimeoutException:
         return None
+
+
+def wait_until_found_and_return_elements(
+        driver: webdriver,
+        look_by: By,
+        look_for: str,
+        time_to_wait: int = 20
+) -> List[WebElement]:
+    try:
+        elements = WebDriverWait(driver, time_to_wait).until(
+            expected_conditions.presence_of_all_elements_located((look_by, look_for))
+        )
+        return elements
+
+    except TimeoutException:
+        return []
 
 
 def press_enter(driver):
@@ -121,6 +143,30 @@ def press_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> b
         element_found.click()
         return True
     return False
+
+
+def find_and_get_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> Optional[WebElement]:
+    element_found = wait_until_found_and_return_element(
+        driver=driver,
+        look_by=By.XPATH,
+        look_for=element_to_find,
+        time_to_wait=time_to_wait
+    )
+    if element_found is not None:
+        return element_found
+    return None
+
+
+def find_and_get_elements(driver: webdriver, element_to_find: str, time_to_wait=30) -> List[WebElement]:
+    elements_found = wait_until_found_and_return_elements(
+        driver=driver,
+        look_by=By.XPATH,
+        look_for=element_to_find,
+        time_to_wait=time_to_wait
+    )
+    if len(elements_found):
+        return elements_found
+    return []
 
 
 def wait_for_element_to_load(driver: webdriver, element_to_find: str, time_to_wait=20) -> bool:
@@ -147,3 +193,36 @@ def enter_input(driver: webdriver, input_element: str, input_text: str) -> bool:
         ActionChains(driver).send_keys_to_element(_input_element, input_text).perform()
         return True
     return False
+
+
+def clear_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> bool:
+    element_found = wait_until_found_and_return_element(
+        driver=driver,
+        look_by=By.XPATH,
+        look_for=element_to_find,
+        time_to_wait=time_to_wait
+    )
+    if element_found:
+        element_found.clear()
+        return True
+    return False
+
+
+def scroll_to_top_once(driver):
+    scroll_pause_time = 3
+
+    # Get scroll height
+    last_height = driver.execute_script("return document.body.scrollHeight")
+
+    while True:
+        # Scroll down to bottom
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+        # Wait to load page
+        time.sleep(scroll_pause_time)
+
+        # Calculate new scroll height and compare with last scroll height
+        new_height = driver.execute_script("return document.body.scrollHeight")
+        if new_height == last_height:
+            break
+        last_height = new_height

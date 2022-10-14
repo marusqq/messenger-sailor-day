@@ -2,6 +2,7 @@ import json
 import os
 import platform
 from datetime import datetime
+import time
 
 if platform.system() == 'Windows':
     import py_setenv
@@ -11,9 +12,22 @@ from cryptography.fernet import Fernet
 import getpass
 
 
+def wait_seconds(seconds: int):
+    time.sleep(seconds)
+
+
 def make_screenshot(driver):
     now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    driver.save_screenshot(f'screenshots/screenshot_{now}.png')
+    driver.save_screenshot(f'{os.getcwd()}/screenshots/screenshot_{now}.png')
+
+
+def get_weekday() -> int:
+    """
+    Returns weekday as int
+    :return: weekday, 1 -> monday, 7 -> sunday
+    """
+    dt = datetime.now()
+    return dt.isoweekday()
 
 
 def get_user_credential(credential_name, sensitive=True):
