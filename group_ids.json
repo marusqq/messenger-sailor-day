@@ -1,0 +1,11 @@
+{
+  "video_group_id": "xxxxxxxxxxxxxxx",
+  "send_group_ids": {
+    "xxxxxxxxxxxxxxxa": "",
+    "xxxxxxxxxxxxxxxb": "",
+    "xxxxxxxxxxxxxxxc": ""
+  },
+  "test_group_ids": {
+    "100000105556453": ""
+  }
+}
