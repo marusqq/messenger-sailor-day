@@ -12,10 +12,9 @@ logged_in, driver = log_in_to_messenger(headless=True, maximise=True)
 
 video_group_url = "8455050194520025"
 
+
 group_ids = {
-    "6099761460094553": "",
-    "100002227277241": "",
-    "4792185507482409": ""
+    "100000105556453": ""
 }
 
 if logged_in:
