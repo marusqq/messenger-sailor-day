@@ -6,6 +6,6 @@ For setup:
 - Create venv from requirements.txt
 - Run **setup_credentials.py** to setup credentials.json. 
   - Your credentials will be encoded and saved into credentials.json, the fernet_key (used in encoding) will be saved in your environment variables. Tested only on Linux though but should work for Windows as well
-  - After setup_credential, reopen terminal so Linux catches the new system_variable
+  - After setup_credential, reopen terminal so Linux catches the new env variable
 - After set up, change group_ids for groups/people you want to send the vids to
 
