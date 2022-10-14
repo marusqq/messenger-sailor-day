@@ -1,6 +1,7 @@
 import json
 import os
 import platform
+from datetime import datetime
 
 if platform.system() == 'Windows':
     import py_setenv
@@ -8,6 +9,11 @@ if platform.system() == 'Windows':
 import pyotp
 from cryptography.fernet import Fernet
 import getpass
+
+
+def make_screenshot(driver):
+    now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    driver.save_screenshot(f'screenshots/screenshot_{now}.png')
 
 
 def get_user_credential(credential_name, sensitive=True):
