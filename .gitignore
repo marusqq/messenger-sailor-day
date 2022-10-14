@@ -1,6 +1,5 @@
 # Sensitive
-group_ids.json
-credentials.json
+*.json
 screenshots/
 
 # Byte-compiled / optimized / DLL files
