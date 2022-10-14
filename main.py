@@ -56,8 +56,6 @@ if logged_in:
     video_forward_elements = find_and_get_elements(
         driver, element_to_find="//div[@aria-label='Forward']")
 
-    util.wait_seconds(10)
-
     # scroll_to_top_once(driver)
     # weekday = 5 - 1 = 4
 
