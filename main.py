@@ -1,23 +1,10 @@
-from common_selenium_methods import log_in_to_messenger
-log_in_to_messenger()
+from common_selenium_methods import log_in_to_messenger, _enter_input, _press_element
 
+logged_in, driver = log_in_to_messenger()
 
-#
-# time.sleep(2)
+if logged_in:
+    driver.get("https://www.messenger.com/t/100000105556453/")
+    _enter_input(driver=driver, input_element="//div[@aria-label='Message']", input_text="test")
+    _press_element(driver=driver, element_to_find="//div[@aria-label='Press enter to send']")
 
-#
-# message_box = selenium_methods.wait_until_found_and_return_element(
-#     driver=driver,
-#     look_by=By.XPATH,
-#     look_for="//div[@aria-label='Message']"
-# )
-# message_box.click()
-# ActionChains(driver).send_keys_to_element(message_box, Keys.ENTER).perform()
-#
-# message_send = selenium_methods.wait_until_found_and_return_element(
-#     driver=driver,
-#     look_by=By.XPATH,
-#     look_for="//div[@aria-label='Press enter to send']"
-# )
-# message_send.click()
 # driver.quit()

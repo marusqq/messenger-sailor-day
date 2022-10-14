@@ -1,4 +1,8 @@
-import os
+from typing import Tuple
+
+from selenium.common import TimeoutException
+from selenium.webdriver.firefox.webdriver import WebDriver
+
 import util
 
 from selenium.webdriver import Keys
@@ -9,7 +13,7 @@ from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-def log_in_to_messenger() -> bool:
+def log_in_to_messenger() -> Tuple[bool, WebDriver]:
     """
     Method that logs in to messenger
     :return: True if logging in was successful
@@ -26,7 +30,10 @@ def log_in_to_messenger() -> bool:
     driver.get('https://messenger.com')
 
     #       1.1. Accept basic cookies
-    _press_element(driver, element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']")
+    _press_element(
+        driver, time_to_wait=10,
+        element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']"
+    )
 
     # 2. Enter login details
     #       2.0. Decode credentials
@@ -49,7 +56,10 @@ def log_in_to_messenger() -> bool:
     _press_element(driver, element_to_find="//a[@role='button']")
 
     #       3.2. Confirm cookies on facebook.com now
-    _press_element(driver, element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']")
+    _press_element(
+        driver, time_to_wait=10,
+        element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']"
+    )
 
     #       3.3. Enter 2fa code
     current_2fa_code = util.get_current_2fa_code(credentials_dict['totp_code'])
@@ -60,7 +70,14 @@ def log_in_to_messenger() -> bool:
     while in_checkpoint:
         in_checkpoint = _press_element(driver, element_to_find="//button[@id='checkpointSubmitButton']")
 
-    return True
+    if not _wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
+        return False, driver
+
+    # 5. Check if driver's url changed to something like: https://www.messenger.com/t/xxxxxxxxxxxxxxxxxx/
+    if 'messenger.com/t/' in driver.current_url:
+        return True, driver
+    else:
+        return False, driver
 
 
 def wait_until_found_and_return_element(
@@ -69,10 +86,14 @@ def wait_until_found_and_return_element(
         look_for: str,
         time_to_wait: int = 20
 ):
-    element = WebDriverWait(driver, time_to_wait).until(
-        expected_conditions.visibility_of_element_located((look_by, look_for))
-    )
-    return element
+    try:
+        element = WebDriverWait(driver, time_to_wait).until(
+            expected_conditions.visibility_of_element_located((look_by, look_for))
+        )
+        return element
+
+    except TimeoutException:
+        return None
 
 
 def press_enter(driver):
@@ -81,16 +102,28 @@ def press_enter(driver):
     actions.perform()
 
 
-def _press_element(driver: webdriver, element_to_find: str) -> bool:
+def _press_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> bool:
     element_found = wait_until_found_and_return_element(
         driver=driver,
         look_by=By.XPATH,
-        look_for=element_to_find
+        look_for=element_to_find,
+        time_to_wait=time_to_wait
     )
-    if element_found:
+    if element_found is not None:
         element_found.click()
         return True
+    return False
 
+
+def _wait_for_element_to_load(driver: webdriver, element_to_find: str, time_to_wait=20) -> bool:
+    element_found = wait_until_found_and_return_element(
+        driver=driver,
+        look_by=By.XPATH,
+        look_for=element_to_find,
+        time_to_wait=time_to_wait
+    )
+    if element_found is not None:
+        return True
     return False
 
 
@@ -101,9 +134,8 @@ def _enter_input(driver: webdriver, input_element: str, input_text: str) -> bool
         look_for=input_element
     )
 
-    if _input_element:
+    if _input_element is not None:
         _input_element.click()
-        _input_element.send_keys(input_text)
+        ActionChains(driver).send_keys_to_element(_input_element, input_text).perform()
         return True
-
     return False
