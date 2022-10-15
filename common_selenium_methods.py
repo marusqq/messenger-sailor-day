@@ -132,6 +132,13 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
             logger.info(f"[Log in to Messenger]: load messenger.com")
             driver.get("https://messenger.com")
 
+            buttons = find_and_get_elements(driver, element_to_find="//button")
+            for button in buttons:
+                logger.info(f"inner: {button.get_attribute('innerHTML')}")
+                logger.info(f"outer: {button.get_attribute('outerHTML')}")
+
+            press_element(driver, element_to_find="//button")
+
         else:
             logger.info(f"[Log in to Messenger]: "
                         f"Driver's current url is not messenger.com/t/xxxxx. Current URL: {driver.current_url}. "
