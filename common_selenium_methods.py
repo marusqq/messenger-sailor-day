@@ -164,6 +164,8 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
     if not wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
         logger.info("[Log in to Messenger]: Chats did not load, something went bad. Making screenshot")
         util.make_screenshot(driver)
+        logger.info("[Log in to Messenger]: page source:")
+        logger.info(driver.page_source)
         driver.quit()
         raise SystemExit("[Log in to Messenger]: Failed")
 
