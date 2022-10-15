@@ -28,7 +28,6 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
     # 0. Check env
     #       0.1. Check that fernet_key exits
     fernet_key = util.get_fernet_key()
-    logger.info(fernet_key.decode())
     logger.info("[Log in to Messenger]: Fernet key: exists")
 
     #       0.2. Read credentials.json
