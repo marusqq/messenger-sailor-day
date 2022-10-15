@@ -18,7 +18,7 @@ from selenium.webdriver.remote.webdriver import WebElement
 from logger import logger
 
 
-def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> WebDriver:
+def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_gpu: bool = True) -> WebDriver:
     """
     Method that logs in to messenger
     :return: True if logging in was successful
@@ -38,6 +38,8 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False) -> WebDr
     options = FirefoxOptions()
     if headless:
         options.add_argument("--headless")
+    if disable_gpu:
+        options.add_argument("--disable-gpu")
 
     # 1. Open messenger.com
     driver = webdriver.Firefox(options=options)
