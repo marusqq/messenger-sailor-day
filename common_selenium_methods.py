@@ -123,18 +123,26 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
         logger.info("[Log in to Messenger]: Making messenger trust driver")
         time.sleep(2)
 
+    # 5. Check if driver's url changed to something like: https://www.messenger.com/t/xxxxxxxxxxxxxxxxxx/
+    if 'messenger.com/t/' not in driver.current_url:
+        if 'facebook.com' in driver.current_url:
+            logger.info(
+                f"[Log in to Messenger]: facebook.com loaded instead of messenger.com,"
+                f" current_url:({driver.current_url})")
+            logger.info(f"[Log in to Messenger]: load messenger.com")
+            driver.get("https://messenger.com")
+
+        else:
+            logger.info(f"[Log in to Messenger]: "
+                        f"Driver's current url is not messenger.com/t/xxxxx. Current URL: {driver.current_url}. "
+                        f"Making screenshot")
+            util.make_screenshot(driver)
+            raise SystemExit("[Log in to Messenger]: messenger.com/facebook.com did not load in webdriver")
+
     if not wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
         logger.info("[Log in to Messenger]: Chats did not load, something went bad. Making screenshot")
         util.make_screenshot(driver)
         raise SystemExit("[Log in to Messenger]: Failed")
-
-    # 5. Check if driver's url changed to something like: https://www.messenger.com/t/xxxxxxxxxxxxxxxxxx/
-    if 'messenger.com/t/' not in driver.current_url:
-        logger.info(f"[Log in to Messenger]: "
-                    f"Driver's current url is not messenger.com/t/xxxxx. Current URL: {driver.current_url}. "
-                    f"Making screenshot")
-        util.make_screenshot(driver)
-        raise SystemExit("[Log in to Messenger]: Logging in to messenger failed")
 
     logger.info("[Log in to Messenger]: OK")
     return driver
