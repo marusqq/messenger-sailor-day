@@ -73,6 +73,10 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
     enter_input(driver, input_element="//input[@id='pass']", input_text=credentials_dict['password'])
     logger.info("[Log in to Messenger]: Password: entered")
 
+    #       2.2.5. Keep me signed in
+    press_element(driver, element_to_find="//input[@type='checkbox']")
+    util.make_screenshot(driver, 'keep_me_signed_in_ty')
+
     #       2.3. Press log in
     press_element(driver, element_to_find="//button[@id='loginbutton']")
     logger.info("[Log in to Messenger]: Log in: pressed")
