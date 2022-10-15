@@ -7,7 +7,7 @@ class Logger:
     console_handler = None
 
     def __init__(self):
-        self.logger = logging.getLogger(name="MrCrabs: ")
+        self.logger = logging.getLogger(name="MrCrabs")
         self.logger.setLevel(logging.INFO)
         self.formatter = logging.Formatter('%(name)s: [%(asctime)s] --- %(message)s')
 
