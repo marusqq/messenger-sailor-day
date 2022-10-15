@@ -197,7 +197,7 @@ def press_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> b
         element_found.click()
         return True
 
-    util.make_screenshot(f"press_element_{util.normalize_filename(element_to_find)}")
+    util.make_screenshot(driver, f"press_element_{util.normalize_filename(element_to_find)}")
     return False
 
 
@@ -211,7 +211,7 @@ def find_and_get_element(driver: webdriver, element_to_find: str, time_to_wait=2
     if element_found is not None:
         return element_found
 
-    util.make_screenshot(f"find_and_get_element_{util.normalize_filename(element_to_find)}")
+    util.make_screenshot(driver, f"find_and_get_element_{util.normalize_filename(element_to_find)}")
     return None
 
 
@@ -225,7 +225,7 @@ def find_and_get_elements(driver: webdriver, element_to_find: str, time_to_wait=
     if len(elements_found):
         return elements_found
 
-    util.make_screenshot(f"find_and_get_elements_failed_{util.normalize_filename(element_to_find)}")
+    util.make_screenshot(driver, f"find_and_get_elements_failed_{util.normalize_filename(element_to_find)}")
     return []
 
 
@@ -239,7 +239,7 @@ def wait_for_element_to_load(driver: webdriver, element_to_find: str, time_to_wa
     if element_found is not None:
         return True
 
-    util.make_screenshot(f"wait_for_element_to_load_{util.normalize_filename(element_to_find)}")
+    util.make_screenshot(driver, f"wait_for_element_to_load_{util.normalize_filename(element_to_find)}")
     return False
 
 
@@ -255,7 +255,7 @@ def enter_input(driver: webdriver, input_element: str, input_text: str) -> bool:
         ActionChains(driver).send_keys_to_element(_input_element, input_text).perform()
         return True
 
-    util.make_screenshot(f"enter_input_failed_{util.normalize_filename(input_element)}")
+    util.make_screenshot(driver, f"enter_input_failed_{util.normalize_filename(input_element)}")
     return False
 
 
@@ -270,6 +270,5 @@ def clear_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> b
         element_found.clear()
         return True
 
-    util.make_screenshot(f"clear_element_fail_{util.normalize_filename(element_to_find)}")
+    util.make_screenshot(driver, f"clear_element_fail_{util.normalize_filename(element_to_find)}")
     return False
-
