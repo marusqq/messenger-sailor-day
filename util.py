@@ -20,9 +20,11 @@ def wait_seconds(seconds: int):
     time.sleep(seconds)
 
 
-def make_screenshot(driver):
-    now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    driver.save_screenshot(f'{os.getcwd()}/screenshots/screenshot_{now}.png')
+def make_screenshot(driver, name=None):
+    if name is None:
+        now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+        name = f"screenshot_{now}"
+    driver.save_screenshot(f'{os.getcwd()}/screenshots/{name}.png')
 
 
 def get_weekday() -> int:

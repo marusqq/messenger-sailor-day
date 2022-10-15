@@ -26,8 +26,9 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
 
     logger.info("[Log in to Messenger]: Started")
     # 0. Check env
-    #       0.1. Check that fernet_key exists
+    #       0.1. Check that fernet_key exits
     fernet_key = util.get_fernet_key()
+    logger.info(fernet_key.decode())
     logger.info("[Log in to Messenger]: Fernet key: exists")
 
     #       0.2. Read credentials.json
@@ -88,6 +89,28 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
         element_to_find="//button[@data-testid='cookie-policy-manage-dialog-accept-button']"
     )
     logger.info("[Log in to Messenger]: Facebook 2FA cookies: Accepted")
+
+    util.make_screenshot(driver, "cookies_accepted")
+    #       3.2.1 It is possible that login details need to be written again,
+    #             so first check if 'approvals_code' exists
+    if not find_and_get_element(driver, element_to_find="//input[@id='approvals_code']"):
+        util.make_screenshot(driver, "approval_code_not_found")
+
+        #       Enter login
+        enter_input(driver, input_element="//input[@id='email']", input_text=credentials_dict['login'])
+        logger.info("[Log in to Messenger]: Login: entered")
+        util.make_screenshot(driver, "enter_login_maybe")
+
+        #       Enter pass
+        enter_input(driver, input_element="//input[@id='pass']", input_text=credentials_dict['password'])
+        logger.info("[Log in to Messenger]: Password: entered")
+        util.make_screenshot(driver, "enter_passw_maybe")
+
+        #       Press log in
+        press_element(driver, element_to_find="//button[@id='loginbutton']")
+        logger.info("[Log in to Messenger]: Log in: pressed")
+
+        util.make_screenshot(driver, "try_logging_in")
 
     #       3.3. Enter 2fa code
     current_2fa_code = util.get_current_2fa_code(credentials_dict['totp_code'])
