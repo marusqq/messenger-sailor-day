@@ -6,6 +6,7 @@ import time
 import pyotp
 from cryptography.fernet import Fernet
 import getpass
+import calendar
 
 from typing import Tuple
 
@@ -31,6 +32,11 @@ def get_weekday() -> int:
     """
     dt = datetime.now()
     return dt.isoweekday()
+
+
+def get_day_name_from_weekday_int(weekday: int) -> str:
+    day_strings = list(calendar.day_name)
+    return day_strings[weekday-1]
 
 
 def get_user_credential(credential_name, sensitive=True):

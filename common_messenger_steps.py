@@ -54,24 +54,7 @@ def get_group_names_from_ids(driver, group_ids):
 def find_correct_video_and_start_forwarding(driver, video_group_id):
     # 1. Get today's weekday number
     weekday = util.get_weekday()
-    match weekday:
-        case 1:
-            weekday_str = "Monday"
-        case 2:
-            weekday_str = "Tuesday"
-        case 3:
-            weekday_str = "Wednesday"
-        case 4:
-            weekday_str = "Thursday"
-        case 5:
-            weekday_str = "Friday"
-        case 6:
-            weekday_str = "Saturday"
-        case 7:
-            weekday_str = "Sunday"
-        case _:
-            weekday_str = "??? xD"
-
+    weekday_str = util.get_day_name_from_weekday_int(weekday)
     logger.info(f"[Find video and Forward]: Today is: {weekday_str}")
 
     # 2. Load up group that has all the videos
