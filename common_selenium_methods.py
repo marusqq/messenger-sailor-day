@@ -146,6 +146,20 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
             press_element(driver, element_to_find="//button[@id='loginbutton']")
             logger.info("[Log in to Messenger]: Log in: pressed3")
 
+            #       Enter login
+            enter_input(driver, input_element="//input[@id='email']", input_text=credentials_dict['login'])
+            logger.info("[Log in to Messenger]: Login: entered")
+            util.make_screenshot(driver, "enter_login_maybe3")
+
+            #       Enter pass
+            enter_input(driver, input_element="//input[@id='pass']", input_text=credentials_dict['password'])
+            logger.info("[Log in to Messenger]: Password: entered")
+            util.make_screenshot(driver, "enter_passw_maybe3")
+
+            #       Press log in
+            press_element(driver, element_to_find="//button[@id='loginbutton']")
+            logger.info("[Log in to Messenger]: Log in: pressed3")
+
             # buttons = find_and_get_elements(driver, element_to_find="//button")
             # for button in buttons:
             #     logger.info(f"inner: {button.get_attribute('innerHTML')}")
