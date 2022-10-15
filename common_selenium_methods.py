@@ -144,11 +144,13 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
                         f"Driver's current url is not messenger.com/t/xxxxx. Current URL: {driver.current_url}. "
                         f"Making screenshot")
             util.make_screenshot(driver)
+            driver.quit()
             raise SystemExit("[Log in to Messenger]: messenger.com/facebook.com did not load in webdriver")
 
     if not wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
         logger.info("[Log in to Messenger]: Chats did not load, something went bad. Making screenshot")
         util.make_screenshot(driver)
+        driver.quit()
         raise SystemExit("[Log in to Messenger]: Failed")
 
     logger.info("[Log in to Messenger]: OK")

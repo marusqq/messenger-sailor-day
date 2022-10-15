@@ -61,8 +61,8 @@ def find_correct_video_and_start_forwarding(driver, video_group_id):
     driver.get(f"https://www.messenger.com/t/{video_group_id}")
     logger.info("[Find video and Forward]: Opened group with videos")
 
-    # if the group didn't load in 20 secs, go to next group id
     if not wait_for_element_to_load(driver, element_to_find="//a[starts-with(@aria-label, 'Chats')]"):
+        driver.quit()
         raise SystemExit(f"[Find video and Forward]: "
                          f"Group that has videos failed to load. Group_id: {video_group_id}")
 
