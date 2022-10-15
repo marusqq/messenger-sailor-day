@@ -16,14 +16,18 @@ if platform.system() == 'Windows':
     import py_setenv
 
 
+def normalize_filename(filename):
+    return "".join(x for x in filename if x.isalnum())
+
+
 def wait_seconds(seconds: int):
     time.sleep(seconds)
 
 
 def make_screenshot(driver, name=None):
-    if name is None:
-        now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-        name = f"screenshot_{now}"
+    now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+    name = f"screenshot_{name}_{now}" if name is not None else f"screenshot_{now}"
+
     driver.save_screenshot(f'{os.getcwd()}/screenshots/{name}.png')
 
 
@@ -38,7 +42,7 @@ def get_weekday() -> int:
 
 def get_day_name_from_weekday_int(weekday: int) -> str:
     day_strings = list(calendar.day_name)
-    return day_strings[weekday-1]
+    return day_strings[weekday - 1]
 
 
 def get_user_credential(credential_name, sensitive=True):

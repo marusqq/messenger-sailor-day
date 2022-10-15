@@ -196,6 +196,8 @@ def press_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> b
     if element_found is not None:
         element_found.click()
         return True
+
+    util.make_screenshot(f"press_element_{util.normalize_filename(element_to_find)}")
     return False
 
 
@@ -208,6 +210,8 @@ def find_and_get_element(driver: webdriver, element_to_find: str, time_to_wait=2
     )
     if element_found is not None:
         return element_found
+
+    util.make_screenshot(f"find_and_get_element_{util.normalize_filename(element_to_find)}")
     return None
 
 
@@ -220,6 +224,8 @@ def find_and_get_elements(driver: webdriver, element_to_find: str, time_to_wait=
     )
     if len(elements_found):
         return elements_found
+
+    util.make_screenshot(f"find_and_get_elements_failed_{util.normalize_filename(element_to_find)}")
     return []
 
 
@@ -232,6 +238,8 @@ def wait_for_element_to_load(driver: webdriver, element_to_find: str, time_to_wa
     )
     if element_found is not None:
         return True
+
+    util.make_screenshot(f"wait_for_element_to_load_{util.normalize_filename(element_to_find)}")
     return False
 
 
@@ -246,6 +254,8 @@ def enter_input(driver: webdriver, input_element: str, input_text: str) -> bool:
         _input_element.click()
         ActionChains(driver).send_keys_to_element(_input_element, input_text).perform()
         return True
+
+    util.make_screenshot(f"enter_input_failed_{util.normalize_filename(input_element)}")
     return False
 
 
@@ -259,24 +269,7 @@ def clear_element(driver: webdriver, element_to_find: str, time_to_wait=20) -> b
     if element_found:
         element_found.clear()
         return True
+
+    util.make_screenshot(f"clear_element_fail_{util.normalize_filename(element_to_find)}")
     return False
 
-
-def scroll_to_top_once(driver):
-    scroll_pause_time = 3
-
-    # Get scroll height
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
-    while True:
-        # Scroll down to bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        # Wait to load page
-        time.sleep(scroll_pause_time)
-
-        # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
