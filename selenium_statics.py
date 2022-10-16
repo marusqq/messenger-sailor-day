@@ -10,7 +10,6 @@ class XPathElements:
     MESSENGER_KEEP_SIGNED_IN_CHECKBOX = "//input[@type='checkbox']/.."
     MESSENGER_MOVE_THROUGH_CHECKPOINT = "//button[@id='checkpointSubmitButton']"
     MESSENGER_CHATS_LABEL = "//a[starts-with(@aria-label, 'Chats')]"
-    MESSENGER_PERSON_NAME_TITLE =
     FACEBOOK_2FA_APPROVAL_CODE_INPUT = "//input[@id='approvals_code']"
     FACEBOOK_2FA_CHALLENGE_START = "//a[@role='button']"
 
