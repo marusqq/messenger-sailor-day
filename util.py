@@ -16,13 +16,19 @@ if platform.system() == 'Windows':
     import py_setenv
 
 
+def normalize_filename(filename):
+    return "".join(x for x in filename if x.isalnum())
+
+
 def wait_seconds(seconds: int):
     time.sleep(seconds)
 
 
-def make_screenshot(driver):
+def make_screenshot(driver, name=None):
     now = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-    driver.save_screenshot(f'{os.getcwd()}/screenshots/screenshot_{now}.png')
+    name = f"screenshot_{name}_{now}" if name is not None else f"screenshot_{now}"
+
+    driver.save_screenshot(f'{os.getcwd()}/screenshots/{name}.png')
 
 
 def get_weekday() -> int:
@@ -36,7 +42,7 @@ def get_weekday() -> int:
 
 def get_day_name_from_weekday_int(weekday: int) -> str:
     day_strings = list(calendar.day_name)
-    return day_strings[weekday-1]
+    return day_strings[weekday - 1]
 
 
 def get_user_credential(credential_name, sensitive=True):
@@ -151,3 +157,8 @@ def fernet_decrypt(message_to_decrypt: bytes, key: bytes) -> str:
 def get_current_2fa_code(base32_code: str) -> str:
     totp = pyotp.TOTP(base32_code)
     return totp.now()
+
+
+def log(msg: str, page=None, method=None, status: bool = None):
+    full_log_msg = f"[{method}] - [{page}] - {msg}" if status is None else f"[{method}] - [{page}] - {msg}: {status}"
+    logger.info(full_log_msg)
