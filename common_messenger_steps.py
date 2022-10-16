@@ -5,20 +5,23 @@ from common_selenium_methods import (
     find_and_get_elements,
     press_element,
     clear_element,
-    enter_input
+    enter_input,
+    get_page
 )
 from logger import logger
+from selenium_statics import XPathElements
 
 
 def get_group_names_from_ids(driver, group_ids):
     group_ids_with_names = {}
-
-    logger.info("[Scraping group name for every group ID]: Started")
+    _method = "get_group_names_from_ids"
+    _page = get_page(driver)
+    util.log(method=_method, page=_page, msg="Start")
 
     for group_id, group_name in group_ids.items():
         driver.get(f"https://www.messenger.com/t/{group_id}")
         # if the group didn't load in 20 secs, go to next group id
-        if not wait_for_element_to_load(driver, element_xpath="//a[starts-with(@aria-label, 'Chats')]"):
+        if not wait_for_element_to_load(driver, element_xpath=XPathElements.MESSENGER_CHATS_LABEL):
             logger.info(f"[Scraping group name for every group ID]: "
                         f"Group ID failed to load in 20 seconds. Maybe bad group ID? {group_id}")
             continue

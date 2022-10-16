@@ -2,7 +2,8 @@ import time
 from typing import Optional, List
 import util
 from logger import logger
-from selenium_statics import XPathElements
+
+from selenium_statics import XPathElements, SeleniumPage
 
 from selenium.common import TimeoutException
 from selenium.webdriver.firefox.webdriver import WebDriver
@@ -16,7 +17,7 @@ from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.remote.webdriver import WebElement
 
 
-def enter_credentials_and_login(driver, check_keep_signed_in, credentials_dict, page):
+def enter_credentials_and_login(driver, credentials_dict, page, check_keep_signed_in=False):
     _method = "Enter credentials and login"
     #       2.1. Enter login
     login_entered = enter_input(
@@ -132,59 +133,37 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
         time.sleep(2)
 
     # 5. Check if driver's url changed to something like: https://www.messenger.com/t/xxxxxxxxxxxxxxxxxx/
+    #    if it changed to facebook.com => stupid META logged us into facebook and not into messenger
     if 'messenger.com/t/' not in driver.current_url:
         if 'facebook.com' in driver.current_url:
-            logger.info(
-                f"[Log in to Messenger]: facebook.com loaded instead of messenger.com,"
-                f" current_url:({driver.current_url})")
-            logger.info(f"[Log in to Messenger]: load messenger.com")
+            util.log(method=_method, page=_page,
+                     msg=f"facebook.com loaded instead of messenger.com, current url: {driver.current_url}")
+
             driver.get("https://messenger.com")
+            util.log(method=_method, page=_page,
+                     msg="Loaded messenger.com")
 
-            #       Enter login
-            enter_input(driver, element_xpath="//input[@id='email']", input_text=credentials_dict['login'])
-            logger.info("[Log in to Messenger]: Login: entered")
-            util.make_screenshot(driver, "enter_login_maybe3")
+            # I don't know, had occurrences of needing to retry logging in few times - need to debug
+            enter_credentials_and_login(driver, credentials_dict=credentials_dict, page=_page)
 
-            #       Enter pass
-            enter_input(driver, element_xpath="//input[@id='pass']", input_text=credentials_dict['password'])
-            logger.info("[Log in to Messenger]: Password: entered")
-            util.make_screenshot(driver, "enter_passw_maybe3")
-
-            #       Press log in
-            press_element(driver, element_xpath="//button[@id='loginbutton']")
-            logger.info("[Log in to Messenger]: Log in: pressed3")
-
-            #       Enter login
-            enter_input(driver, element_xpath="//input[@id='email']", input_text=credentials_dict['login'])
-            logger.info("[Log in to Messenger]: Login: entered")
-            util.make_screenshot(driver, "enter_login_maybe3")
-
-            #       Enter pass
-            enter_input(driver, element_xpath="//input[@id='pass']", input_text=credentials_dict['password'])
-            logger.info("[Log in to Messenger]: Password: entered")
-            util.make_screenshot(driver, "enter_passw_maybe3")
-
-            #       Press log in
-            press_element(driver, element_xpath="//button[@id='loginbutton']")
-            logger.info("[Log in to Messenger]: Log in: pressed3")
+            enter_credentials_and_login(driver, credentials_dict=credentials_dict, page=_page)
 
         else:
-            logger.info(f"[Log in to Messenger]: "
-                        f"Driver's current url is not messenger.com/t/xxxxx. Current URL: {driver.current_url}. "
-                        f"Making screenshot")
-            util.make_screenshot(driver)
+            util.log(method=_method, page=_page, msg="Driver's current url is not messenger and not facebook.com"
+                                                     f"Doing a screenshot. Current URL: {driver.current_url}")
+            util.make_screenshot(driver, name="NO_CORRECT_URL_FOUND")
             driver.quit()
-            raise SystemExit("[Log in to Messenger]: messenger.com/facebook.com did not load in webdriver")
+            raise SystemExit(f"messenger.com/facebook.com did not load in {_method}")
 
-    if not wait_for_element_to_load(driver, element_xpath="//a[starts-with(@aria-label, 'Chats')]"):
-        logger.info("[Log in to Messenger]: Chats did not load, something went bad. Making screenshot")
+    if not wait_for_element_to_load(driver, element_xpath=XPathElements.MESSENGER_CHATS_LABEL):
+        util.log(method=_method, page=_page, msg="Did not find messenger chat label. Connection failed")
         util.make_screenshot(driver)
-        logger.info("[Log in to Messenger]: page source:")
+        logger.info("Page source:")
         logger.info(driver.page_source)
         driver.quit()
         raise SystemExit("[Log in to Messenger]: Failed")
 
-    logger.info("[Log in to Messenger]: OK")
+    util.log(method=_method, page=_page, msg="OK")
     return driver
 
 
@@ -317,8 +296,8 @@ def clear_element(driver: webdriver, element_xpath: str, time_to_wait=20) -> boo
 def get_page(driver):
     """
     Very tough method that recognizes the html page and returns string of a page
-    :param driver:
-    :return:
     """
+
+    # check for default messenger log in page
 
     return 'idk yet'

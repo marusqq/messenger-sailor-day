@@ -160,5 +160,5 @@ def get_current_2fa_code(base32_code: str) -> str:
 
 
 def log(msg: str, page=None, method=None, status: bool = None):
-    full_log_msg = f"[{method}] - [{page}] - {msg}: {status}"
+    full_log_msg = f"[{method}] - [{page}] - {msg}" if status is None else f"[{method}] - [{page}] - {msg}: {status}"
     logger.info(full_log_msg)
