@@ -157,3 +157,8 @@ def fernet_decrypt(message_to_decrypt: bytes, key: bytes) -> str:
 def get_current_2fa_code(base32_code: str) -> str:
     totp = pyotp.TOTP(base32_code)
     return totp.now()
+
+
+def log(msg: str, page=None, method=None, status: bool = None):
+    full_log_msg = f"[{method}] - [{page}] - {msg}: {status}"
+    logger.info(full_log_msg)
