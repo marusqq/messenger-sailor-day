@@ -36,7 +36,7 @@ def wait_until_found_and_return_elements(
 
 
 # launch firefox and messenger on TAB 0
-driver = log_in_to_messenger(headless=False, maximise=False, disable_gpu=False)
+driver = log_in_to_messenger(headless=True, maximise=False, disable_gpu=True)
 driver.get("https://www.messenger.com/t/4792185507482409")
 
 # LAUNCH HLTV
