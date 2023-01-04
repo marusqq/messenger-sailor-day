@@ -91,6 +91,7 @@ def log_in_to_messenger(headless: bool = False, maximise: bool = False, disable_
     util.log(method=_method, msg="Decoding credentials with fernet_key",
              page=_page, status=bool(credentials_dict.keys()))
 
+    time.sleep(2)
     #       2.1 Use them to enter login
     enter_credentials_and_login(
         driver, check_keep_signed_in=True, credentials_dict=credentials_dict, page=_page)
