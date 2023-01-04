@@ -63,10 +63,8 @@ while len(top20_found.keys()) < 21:
     top20_found_in_this_run = {}
     new_top20_found = {}
 
-    driver.switch_to.window(driver.window_handles[1])
-    driver.get("https://www.hltv.org/news/archive/2023/january")
-
     # get all news articles: HLTV
+    driver.get("https://www.hltv.org/news/archive/2023/january")
     news_articles = driver.find_elements(by=By.XPATH, value="//a[@class='newsline article']")
     news_articles.reverse()
 
@@ -96,6 +94,9 @@ while len(top20_found.keys()) < 21:
         send_buttons[0].click()
 
         time.sleep(2)
+
+    # switch back to hltv news page, so I don't instantly do 'seen' in the group
+    driver.switch_to.window(driver.window_handles[1])
 
     # random wait after writing
     random_sleep(300, 600)
