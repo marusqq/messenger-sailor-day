@@ -12,10 +12,16 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from common_selenium_methods import log_in_to_messenger
 
+from datetime import datetime
 
 def random_sleep(min_secs=3, max_secs=8):
     sleep_for = random.randint(min_secs, max_secs)
     print(f'Sleep randomly for {min_secs}-{max_secs} seconds (this time: {sleep_for})')
+
+    now = datetime.now()
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+    print(f'Time of sleeping: {dt_string}')
     time.sleep(sleep_for)
 
 
@@ -97,6 +103,6 @@ while len(top20_found.keys()) < 21:
 
     # switch back to hltv news page, so I don't instantly do 'seen' in the group
     driver.switch_to.window(driver.window_handles[1])
-
+    
     # random wait after writing
     random_sleep(300, 600)
