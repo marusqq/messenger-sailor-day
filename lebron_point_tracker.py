@@ -47,7 +47,7 @@ def parse_nba_page(driver):
         look_for="//ul[@data-stringify-type='unordered-list']",
         time_to_wait=30
     )
-    
+
     # left points
     pts_left_element = driver.find_element(by=By.XPATH, value="//p/span[@style='color: #ff0000;']/strong")
     pts_left = pts_left_element.text.split(' career')[0]
@@ -164,12 +164,13 @@ def collect_message(information):
     msg_last_games = f"Last games for LBJ: {last_games_str}"
 
     last_game = information['last_games'][0]
-    last_game_date = list(information['last_games'][0].keys())[0]
+    last_game_date = list(last_game.keys())[0]
     lebron_scored_last_game = information['last_games'][0][last_game_date]['lebron_pts_scored']
 
-    msg_lebron_pts_left = f"Points left for LeBron James ({information['lebron_career_pts']}) " \
-                          f"to reach Kareem Abdul-Jabbar ({information['kareem_career_pts']}): " \
-                          f"{information['lebron_pts_left']}. Last game LeBron scored: {lebron_scored_last_game}"
+    msg_lebron_pts_left = f"{information['lebron_pts_left']} points left for LeBron James " \
+                          f"({information['lebron_career_pts']}) " \
+                          f"to reach Kareem Abdul-Jabbar ({information['kareem_career_pts']}). " \
+                          f"Last game LeBron scored: {lebron_scored_last_game}"
 
     # message_list.append(msg_headline)
     message_list.append(msg_lebron_pts_left)
