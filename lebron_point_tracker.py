@@ -40,6 +40,14 @@ def parse_nba_page(driver):
 
     time.sleep(5)
 
+    # wait for a page to load by waiting for one of the lists to load
+    _ = wait_until_found_and_return_elements(
+        driver,
+        look_by=By.XPATH,
+        look_for="//ul[@data-stringify-type='unordered-list']",
+        time_to_wait=30
+    )
+    
     # left points
     pts_left_element = driver.find_element(by=By.XPATH, value="//p/span[@style='color: #ff0000;']/strong")
     pts_left = pts_left_element.text.split(' career')[0]
