@@ -235,7 +235,7 @@ if lebron_diff_changed:
         json.dump(lebron_diff_dict, lebron_diff_json)
 
     # send messages
-    for group_id in TEST_GROUP_IDS:
+    for group_id in GROUP_IDS:
 
         # load messenger window
         driver.get(f"https://www.messenger.com/t/{group_id}")
