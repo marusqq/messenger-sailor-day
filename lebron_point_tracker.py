@@ -174,7 +174,7 @@ def collect_message(information):
 
 
 # login to messenger
-driver = log_in_to_messenger(headless=False, maximise=False, disable_gpu=True)
+driver = log_in_to_messenger(headless=True, maximise=False, disable_gpu=True)
 
 # for tests:
 # ---------------
