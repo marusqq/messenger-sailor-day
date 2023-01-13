@@ -129,8 +129,8 @@ def collect_message(information):
     dt_string = now.strftime("%Y-%m-%d %H:%M:%S")
     msg_headline = f"{dt_string} update:"
 
-    msg_prediction = f"With PPG of {information['lebron_ppg']} Lebron would need " \
-                     f"{information['lebron_games_left_prediction']} games to reach Kareem"
+    msg_prediction = f"{information['lebron_games_left_prediction']} games are predicted for LeBron to reach Kareem " \
+                     f"(LeBron James ppg: {information['lebron_ppg']})"
 
     # ----- next games -----
     next_games = []
