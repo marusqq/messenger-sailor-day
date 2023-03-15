@@ -2,6 +2,7 @@ import time
 from typing import List, Optional
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions
@@ -99,7 +100,6 @@ while True:
 
     for message in messages:
 
-        message.click()
         print('click on msg')
         message_sender_nickname = message.find_element(by=By.XPATH, value='.//div/div/span').text
         print(f"Messenger sender nickname: {message_sender_nickname}")
@@ -107,6 +107,12 @@ while True:
         # if sender is in ignore list - delete
         if message_sender_nickname in IGNORE_LIST.values():
             print(f"HES IGNORED: {IGNORE_LIST.values()}")
+
+            hover = ActionChains(driver).move_to_element(message)
+            hover.perform()
+
+            time.sleep(2)
+
             delete_menu = wait_until_found_and_return_elements(
                 driver,
                 look_by=By.XPATH,
