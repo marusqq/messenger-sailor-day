@@ -121,14 +121,17 @@ while True:
 
             time.sleep(2)
 
-            delete_menu = wait_until_found_and_return_elements(
-                driver,
-                look_by=By.XPATH,
-                look_for="//div[starts-with(@aria-label, 'Menu')]",
-                time_to_wait=10
-            )[0]
-            print('find delete menu')
-            delete_menu.click()
+            # delete_menu = wait_until_found_and_return_elements(
+            #     driver,
+            #     look_by=By.XPATH,
+            #     look_for="//div[starts-with(@aria-label, 'Menu')]",
+            #     time_to_wait=10
+            # )[0]
+            location = message.location
+            actions = ActionChains(driver)
+            actions.move_to_element(message).move_by_offset(xoffset=30, yoffset=0).click().perform()
+            # print('find delete menu')
+            # delete_menu.click()
             print(f"click open delete menu")
 
             remove_message_btn = wait_until_found_and_return_elements(
