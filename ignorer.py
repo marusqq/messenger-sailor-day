@@ -92,7 +92,7 @@ while True:
     messages = wait_until_found_and_return_elements(
         driver,
         look_by=By.XPATH,
-        look_for="//a[starts-with(@aria-label, 'Messages in conversation titled')]",
+        look_for="//div[starts-with(@aria-label, 'Messages in conversation titled')]",
         time_to_wait=3
     )
     print(f"Messages found: {len(messages)}")
@@ -109,7 +109,7 @@ while True:
             delete_menu = wait_until_found_and_return_elements(
                 driver,
                 look_by=By.XPATH,
-                look_for="//a[starts-with(@aria-label, 'Menu')]",
+                look_for="//div[starts-with(@aria-label, 'Menu')]",
                 time_to_wait=5
             )[0]
             delete_menu.click()
@@ -118,7 +118,7 @@ while True:
             remove_message_btn = wait_until_found_and_return_elements(
                 driver,
                 look_by=By.XPATH,
-                look_for="//a[starts-with(@aria-label, 'Remove message')]",
+                look_for="//div[starts-with(@aria-label, 'Remove message')]",
                 time_to_wait=5
             )[0]
             remove_message_btn.click()
@@ -127,7 +127,7 @@ while True:
             remove_message_confirm_btn = wait_until_found_and_return_elements(
                 driver,
                 look_by=By.XPATH,
-                look_for="//a[starts-with(@aria-label, 'Remove')]",
+                look_for="//div[starts-with(@aria-label, 'Remove')]",
                 time_to_wait=5
             )[0]
             remove_message_confirm_btn.click()
