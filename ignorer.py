@@ -111,7 +111,7 @@ while True:
                 driver,
                 look_by=By.XPATH,
                 look_for="//div[starts-with(@aria-label, 'Menu')]",
-                time_to_wait=5
+                time_to_wait=10
             )[0]
             print('find delete menu')
             delete_menu.click()
