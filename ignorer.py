@@ -91,11 +91,9 @@ driver.get(f"https://www.messenger.com/t/{GROUP_ID}")
 while True:
     time.sleep(3)
 
-    messages = wait_until_found_and_return_elements(
-        driver,
-        look_by=By.XPATH,
-        look_for="//div[starts-with(@aria-label, 'Messages in conversation titled')]",
-        time_to_wait=3
+    messages = driver.find_elements(
+        by=By.XPATH,
+        value="//div[starts-with(@aria-label, 'Messages in conversation titled')]/div"
     )
     print(f"Messages found: {len(messages)}")
 
