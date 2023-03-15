@@ -1,7 +1,7 @@
 import time
 from typing import List, Optional
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import TimeoutException, MoveTargetOutOfBoundsException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
@@ -73,6 +73,7 @@ def get_nickname_by_name(ignore_list):
     # conversation_settings_button.click()
 
     return {"Titas Kvederys": "90"}
+
 
 def scroll_to_element(driver, element):
     actions = ActionChains(driver)
