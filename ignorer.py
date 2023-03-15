@@ -99,21 +99,23 @@ while True:
 
     for message in messages:
 
+        message.click()
+        print('click on msg')
         message_sender_nickname = message.find_element(by=By.XPATH, value='.//div/div/span').text
         print(f"Messenger sender nickname: {message_sender_nickname}")
 
         # if sender is in ignore list - delete
         if message_sender_nickname in IGNORE_LIST.values():
             print(f"HES IGNORED: {IGNORE_LIST.values()}")
-            message.click()
             delete_menu = wait_until_found_and_return_elements(
                 driver,
                 look_by=By.XPATH,
                 look_for="//div[starts-with(@aria-label, 'Menu')]",
                 time_to_wait=5
             )[0]
+            print('find delete menu')
             delete_menu.click()
-            print(f"OPENED DELETE MENU")
+            print(f"click open delete menu")
 
             remove_message_btn = wait_until_found_and_return_elements(
                 driver,
