@@ -89,6 +89,8 @@ driver.get(f"https://www.messenger.com/t/{GROUP_ID}")
 
 # start to look for messages
 while True:
+    time.sleep(3)
+
     messages = wait_until_found_and_return_elements(
         driver,
         look_by=By.XPATH,
@@ -132,5 +134,3 @@ while True:
             )[0]
             remove_message_confirm_btn.click()
             print(f"CONFIRMING")
-
-    time.sleep(3)
