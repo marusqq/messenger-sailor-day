@@ -9,7 +9,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from common_selenium_methods import log_in_to_messenger
 
-GROUP_ID = ["6099761460094553"]
+GROUP_ID = 6099761460094553
 
 IGNORE_LIST = {
     "Titas Kvederys": ""
@@ -74,7 +74,7 @@ def get_nickname_by_name(ignore_list):
     return {"Titas Kvederys": "90"}
 
 
-driver = log_in_to_messenger(headless=True, maximise=False, disable_gpu=True)
+driver = log_in_to_messenger(headless=False, maximise=True, disable_gpu=True)
 
 # load that group
 driver.get(f"https://www.messenger.com/t/{GROUP_ID}")
@@ -95,13 +95,16 @@ while True:
         look_for="//a[starts-with(@aria-label, 'Messages in conversation titled')]",
         time_to_wait=3
     )
+    print(f"Messages found: {len(messages)}")
 
     for message in messages:
 
         message_sender_nickname = message.find_element(by=By.XPATH, value='./div/div/span').text
+        print(f"Messenger sender nickname: {message_sender_nickname}")
 
         # if sender is in ignore list - delete
         if message_sender_nickname in IGNORE_LIST.values():
+            print(f"HES IGNORED: {IGNORE_LIST.values()}")
             message.click()
             delete_menu = wait_until_found_and_return_elements(
                 driver,
@@ -110,6 +113,7 @@ while True:
                 time_to_wait=5
             )[0]
             delete_menu.click()
+            print(f"OPENED DELETE MENU")
 
             remove_message_btn = wait_until_found_and_return_elements(
                 driver,
@@ -118,6 +122,7 @@ while True:
                 time_to_wait=5
             )[0]
             remove_message_btn.click()
+            print(f"REMOVING MESSAGE")
 
             remove_message_confirm_btn = wait_until_found_and_return_elements(
                 driver,
@@ -126,5 +131,6 @@ while True:
                 time_to_wait=5
             )[0]
             remove_message_confirm_btn.click()
+            print(f"CONFIRMING")
 
     time.sleep(3)
