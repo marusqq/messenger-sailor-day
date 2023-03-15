@@ -99,7 +99,7 @@ while True:
 
     for message in messages:
 
-        message_sender_nickname = message.find_element(by=By.XPATH, value='./div/div/span').text
+        message_sender_nickname = message.find_element(by=By.XPATH, value='.//div/div/span').text
         print(f"Messenger sender nickname: {message_sender_nickname}")
 
         # if sender is in ignore list - delete
