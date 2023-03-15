@@ -74,7 +74,7 @@ def get_nickname_by_name(ignore_list):
     return {"Titas Kvederys": "90"}
 
 
-driver = log_in_to_messenger(headless=False, maximise=True, disable_gpu=True)
+driver = log_in_to_messenger(headless=False, maximise=False, disable_gpu=True)
 
 # load that group
 driver.get(f"https://www.messenger.com/t/{GROUP_ID}")
