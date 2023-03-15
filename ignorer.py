@@ -74,6 +74,14 @@ def get_nickname_by_name(ignore_list):
 
     return {"Titas Kvederys": "90"}
 
+def scroll_to_element(driver, element):
+    actions = ActionChains(driver)
+    try:
+        actions.move_to_element(element).perform()
+    except MoveTargetOutOfBoundsException as e:
+        print(e)
+        driver.execute_script("arguments[0].scrollIntoView(true);", element)
+
 
 driver = log_in_to_messenger(headless=False, maximise=False, disable_gpu=True)
 
@@ -108,8 +116,7 @@ while True:
         if message_sender_nickname in IGNORE_LIST.values():
             print(f"HES IGNORED: {IGNORE_LIST.values()}")
 
-            hover = ActionChains(driver).move_to_element(message)
-            hover.perform()
+            scroll_to_element(driver, message)
 
             time.sleep(2)
 
